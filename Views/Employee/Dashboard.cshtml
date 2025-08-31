@@ -1,0 +1,195 @@
+@model WebApplication2.ViewModels.EmployeeDashboardViewModel
+
+@{
+    ViewData["Title"] = "Employee Dashboard";
+}
+
+<div class="container py-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    @if (!string.IsNullOrEmpty(Model.Employee.ProfilePictureUrl))
+                    {
+                        <img src="@Model.Employee.ProfilePictureUrl" alt="Profile Picture" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                    }
+                    else
+                    {
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px;">
+                            <i class="bi bi-person-fill" style="font-size: 3rem;"></i>
+                        </div>
+                    }
+                    
+                    <h5 class="card-title">@(Model.Employee.User?.FirstName ?? "") @(Model.Employee.User?.LastName ?? "")</h5>
+                    <p class="text-muted">@Model.Employee.PositionTitle</p>
+                    <p class="text-muted">@Model.Employee.Company?.Name</p>
+                    
+                    <hr>
+                    
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Employee" asp-action="Edit" asp-route-id="@Model.Employee.Id" class="btn btn-outline-primary">
+                            <i class="bi bi-pencil-square"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- Stats Cards -->
+            <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+                <div class="col">
+                    <div class="card bg-primary text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h6 class="card-title">Active Jobs</h6>
+                                    <h2 class="card-text">@Model.ActiveJobsCount</h2>
+                                </div>
+                                <div class="ms-auto">
+                                    <i class="bi bi-briefcase-fill" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a asp-controller="Jobs" asp-action="Index" class="text-white">View All <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card bg-success text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h6 class="card-title">Total Applications</h6>
+                                    <h2 class="card-text">@Model.TotalApplicationsCount</h2>
+                                </div>
+                                <div class="ms-auto">
+                                    <i class="bi bi-file-earmark-text-fill" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a asp-controller="Applications" asp-action="AllApplications" class="text-white">View All <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card bg-info text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h6 class="card-title">New Applications</h6>
+                                    <h2 class="card-text">@Model.NewApplicationsCount</h2>
+                                </div>
+                                <div class="ms-auto">
+                                    <i class="bi bi-bell-fill" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a asp-controller="Applications" asp-action="AllApplications" asp-route-filter="new" class="text-white">View New <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a asp-controller="Jobs" asp-action="Create" class="btn btn-outline-primary w-100 h-100 py-3">
+                                <i class="bi bi-plus-lg d-block mb-2" style="font-size: 1.5rem;"></i>
+                                Post New Job
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a asp-controller="Applications" asp-action="AllApplications" class="btn btn-outline-success w-100 h-100 py-3">
+                                <i class="bi bi-file-earmark-text d-block mb-2" style="font-size: 1.5rem;"></i>
+                                Review Applications
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a asp-controller="Jobs" asp-action="Index" class="btn btn-outline-info w-100 h-100 py-3">
+                                <i class="bi bi-briefcase d-block mb-2" style="font-size: 1.5rem;"></i>
+                                Manage Job Listings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Jobs -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Job Postings</h5>
+                    <a asp-controller="Jobs" asp-action="Index" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentJobs.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Posted Date</th>
+                                        <th>Applications</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var job in Model.RecentJobs)
+                                    {
+                                        <tr>
+                                            <td>@job.JobTitle</td>
+                                            <td>@job.PostedDate.ToString("MMM dd, yyyy")</td>
+                                            <td>@job.Applications.Count</td>
+                                            <td><span class="badge @(job.JobStatus.StatusName == "Active" ? "bg-success" : "bg-secondary")">@job.JobStatus.StatusName</span></td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="btn btn-outline-primary">View</a>
+                                                    <a asp-controller="Jobs" asp-action="Edit" asp-route-id="@job.Id" class="btn btn-outline-warning">Edit</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <p>No jobs posted yet.</p>
+                            <a asp-controller="Jobs" asp-action="Create" class="btn btn-primary">Create Your First Job</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

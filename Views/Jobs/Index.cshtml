@@ -1,0 +1,54 @@
+@model IEnumerable<WebApplication2.Models.Job>
+
+@{
+    ViewData["Title"] = "My Job Listings";
+}
+
+<h1>My Job Listings</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Job</a>
+</p>
+
+<div class="row">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">@item.JobTitle</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>Company:</strong> @item.Company.Name</p>
+                        <p class="card-text"><strong>Location:</strong> @item.Location.LocationName</p>
+                        <p class="card-text"><strong>Type:</strong> @item.EmploymentType.TypeName</p>
+                        <p class="card-text"><strong>Status:</strong> <span class="badge @(item.JobStatus.StatusName == "Active" ? "bg-success" : "bg-secondary")">@item.JobStatus.StatusName</span></p>
+                        <p class="card-text"><strong>Posted:</strong> @item.PostedDate.ToString("MMM dd, yyyy")</p>
+                        
+                        @if (item.ApplicationDeadline.HasValue)
+                        {
+                            <p class="card-text"><strong>Deadline:</strong> @item.ApplicationDeadline.Value.ToString("MMM dd, yyyy")</p>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group" role="group">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="alert alert-info">
+                <p>You haven't posted any jobs yet. <a asp-action="Create">Create your first job posting</a>.</p>
+            </div>
+        </div>
+    }
+</div>

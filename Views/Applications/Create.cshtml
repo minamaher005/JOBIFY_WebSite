@@ -1,0 +1,96 @@
+@model WebApplication2.ViewModels.ApplicationCreateViewModel
+
+@{
+    ViewData["Title"] = "Apply for Job";
+    var job = ViewBag.Job;
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Apply for: @job.JobTitle</h2>
+                </div>
+                
+                <div class="card-body">
+                    <div class="job-summary mb-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Company:</strong> @job.Company.Name</p>
+                                <p><strong>Location:</strong> @job.Location.LocationName</p>
+                                <p><strong>Job Type:</strong> @job.EmploymentType.TypeName</p>
+                            </div>
+                            <div class="col-md-6">
+                                @if (job.SalaryFrom.HasValue && job.SalaryTo.HasValue)
+                                {
+                                    <p><strong>Salary Range:</strong> @job.SalaryFrom.Value.ToString("N0") - @job.SalaryTo.Value.ToString("N0") @job.Currency</p>
+                                }
+                                <p><strong>Posted:</strong> @job.PostedDate.ToString("MMM dd, yyyy")</p>
+                                @if (job.ApplicationDeadline.HasValue)
+                                {
+                                    <p><strong>Deadline:</strong> @job.ApplicationDeadline.Value.ToString("MMM dd, yyyy")</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr />
+                    
+                    <form asp-controller="Applications" asp-action="Create" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="JobId" value="@job.Id" />
+                        
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="PreviousCompany" class="form-label">Previous Company</label>
+                            <input asp-for="PreviousCompany" class="form-control" placeholder="Enter your previous company name (if any)" />
+                            <span asp-validation-for="PreviousCompany" class="text-danger"></span>
+                            <div class="form-text">Your most recent employer (optional).</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Resume" class="form-label">Resume/CV</label>
+                            <input asp-for="Resume" type="file" class="form-control" accept=".pdf,.doc,.docx" />
+                            <span asp-validation-for="Resume" class="text-danger"></span>
+                            <div class="form-text">Upload your resume in PDF, DOC, or DOCX format (max 5MB).</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="AvailableStartDate" class="form-label">Available Start Date</label>
+                            <input asp-for="AvailableStartDate" type="date" class="form-control" />
+                            <span asp-validation-for="AvailableStartDate" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="ExpectedSalary" class="form-label">Expected Salary (@job.Currency)</label>
+                            <input asp-for="ExpectedSalary" type="number" class="form-control" placeholder="Enter your expected salary" />
+                            <span asp-validation-for="ExpectedSalary" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="AdditionalInformation" class="form-label">Additional Information (Optional)</label>
+                            <textarea asp-for="AdditionalInformation" class="form-control" rows="3" placeholder="Anything else you'd like to share with the employer..."></textarea>
+                            <span asp-validation-for="AdditionalInformation" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Submit Application</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

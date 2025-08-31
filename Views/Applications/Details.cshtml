@@ -1,0 +1,119 @@
+@model WebApplication2.Models.Application
+
+@{
+    ViewData["Title"] = "Application Details";
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Application Details</h4>
+                    <div>
+                        @if (User.IsInRole("JobSeeker"))
+                        {
+                            <a asp-controller="Jobs" asp-action="Details" asp-route-id="@Model.JobId" class="btn btn-outline-primary">View Job</a>
+                        }
+                        else if (User.IsInRole("Employee"))
+                        {
+                            <a asp-controller="Applications" asp-action="UpdateStatus" asp-route-id="@Model.Id" class="btn btn-primary">Update Status</a>
+                        }
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="text-primary mb-1">@Model.Job.JobTitle</h5>
+                            <span class="badge @(Model.Status.StatusName switch
+                                {
+                                    "Pending" => "bg-warning text-dark",
+                                    "Reviewed" => "bg-info text-dark",
+                                    "Interview" => "bg-primary",
+                                    "Accepted" => "bg-success",
+                                    "Rejected" => "bg-danger",
+                                    _ => "bg-secondary"
+                                })">
+                                @Model.Status.StatusName
+                            </span>
+                        </div>
+                        <p class="text-muted">@Model.Job.Company.Name</p>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Application Date</h6>
+                            <p>@(Model.AppliedDate?.ToString("MMMM dd, yyyy") ?? "Not specified")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Last Updated</h6>
+                            <p>@Model.UpdatedAt.ToString("MMMM dd, yyyy")</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6>Previous Company</h6>
+                        <div class="p-3 bg-light rounded">
+                            @(string.IsNullOrEmpty(Model.PreviousCompany) ? "No previous company provided" : Model.PreviousCompany)
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6>Resume/CV</h6>
+                        @if (string.IsNullOrEmpty(Model.ResumeUrl))
+                        {
+                            <p class="text-muted">No resume uploaded</p>
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-file-earmark-text fs-3 me-2"></i>
+                                <a href="@Model.ResumeUrl" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    View Resume
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+                    @if (User.IsInRole("Employee"))
+                    {
+                        <hr>
+                        <div class="mb-3">
+                            <h6>Applicant Information</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Name:</strong> @(Model.JobSeeker.User?.FirstName ?? "") @(Model.JobSeeker.User?.LastName ?? "")</p>
+                                    <p><strong>Email:</strong> @(Model.JobSeeker.User?.Email ?? "Not specified")</p>
+                                    <p><strong>Phone:</strong> @(Model.JobSeeker.User?.PhoneNumber ?? "Not specified")</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Experience:</strong> @(Model.JobSeeker.YearsOfExperience ?? 0) years</p>
+                                    <p><strong>Education:</strong> @(Model.JobSeeker.EducationLevel?.LevelName ?? "Not specified")</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between">
+                        @if (User.IsInRole("JobSeeker"))
+                        {
+                            <a asp-controller="Applications" asp-action="MyApplications" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to My Applications
+                            </a>
+                        }
+                        else if (User.IsInRole("Employee"))
+                        {
+                            <a asp-controller="Applications" asp-action="JobApplications" asp-route-id="@Model.JobId" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Applications
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

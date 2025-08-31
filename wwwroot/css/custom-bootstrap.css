@@ -1,0 +1,151 @@
+/* Custom Bootstrap Overrides */
+:root {
+  --bs-primary: #113f67;
+  --bs-secondary: #34699a;
+  --bs-info: #58a0c8;
+  --bs-warning: #fdf5aa;
+  --bs-primary-rgb: 17, 63, 103;
+  --bs-secondary-rgb: 52, 105, 154;
+  --bs-info-rgb: 88, 160, 200;
+  --bs-warning-rgb: 253, 245, 170;
+}
+
+/* Primary Button */
+.btn-primary {
+  background-color: #113f67;
+  border-color: #113f67;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: #34699a !important;
+  border-color: #34699a !important;
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background-color: #34699a;
+  border-color: #34699a;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+  background-color: #58a0c8 !important;
+  border-color: #58a0c8 !important;
+}
+
+/* Info Button/Elements */
+.btn-info {
+  background-color: #58a0c8;
+  border-color: #58a0c8;
+  color: white;
+}
+
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active {
+  background-color: #4a8fb5 !important;
+  border-color: #4a8fb5 !important;
+  color: white !important;
+}
+
+/* Warning Button/Elements */
+.btn-warning {
+  background-color: #fdf5aa;
+  border-color: #fdf5aa;
+  color: #113f67;
+}
+
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active {
+  background-color: #fdf087 !important;
+  border-color: #fdf087 !important;
+  color: #113f67 !important;
+}
+
+/* Background colors */
+.bg-primary {
+  background-color: #113f67 !important;
+}
+
+.bg-secondary {
+  background-color: #34699a !important;
+}
+
+.bg-info {
+  background-color: #58a0c8 !important;
+}
+
+.bg-warning {
+  background-color: #fdf5aa !important;
+}
+
+/* Text colors */
+.text-primary {
+  color: #113f67 !important;
+}
+
+.text-secondary {
+  color: #34699a !important;
+}
+
+.text-info {
+  color: #58a0c8 !important;
+}
+
+.text-warning {
+  color: #fdf5aa !important;
+}
+
+/* Border colors */
+.border-primary {
+  border-color: #113f67 !important;
+}
+
+.border-secondary {
+  border-color: #34699a !important;
+}
+
+.border-info {
+  border-color: #58a0c8 !important;
+}
+
+.border-warning {
+  border-color: #fdf5aa !important;
+}
+
+/* Link colors */
+a {
+  color: #34699a;
+}
+
+a:hover {
+  color: #113f67;
+}
+
+/* Form focus state */
+.form-control:focus,
+.form-select:focus {
+  border-color: #58a0c8;
+  box-shadow: 0 0 0 0.25rem rgba(17, 63, 103, 0.25);
+}
+
+/* Custom color utilities */
+.bg-primary-light {
+  background-color: rgba(17, 63, 103, 0.1) !important;
+}
+
+.bg-accent {
+  background-color: #fdf5aa !important;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #113f67 0%, #34699a 100%) !important;
+}
+
+.bg-gradient-secondary {
+  background: linear-gradient(135deg, #34699a 0%, #58a0c8 100%) !important;
+}

@@ -1,0 +1,131 @@
+@model IEnumerable<WebApplication2.Models.Company>
+
+@{
+    ViewData["Title"] = "Companies";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5 section-title">
+        <h1 class="display-4 fw-bold text-primary">Top Companies</h1>
+        <p class="lead">Discover leading employers across all industries</p>
+        <div class="angled-section mt-4"></div>
+    </div>
+    
+    <div class="row g-4">
+        @foreach (var company in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm glass-effect card-hover">
+                    <div class="card-header bg-gradient-primary text-white d-flex align-items-center border-0 pt-4 pb-3 px-4 rounded-top">
+                        <div class="company-logo-wrapper me-3 bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            @if (!string.IsNullOrEmpty(company.LogoUrl))
+                            {
+                                <img src="@company.LogoUrl" alt="@company.Name logo" style="max-height: 40px; max-width: 40px;" />
+                            }
+                            else
+                            {
+                                <i class="bi bi-building fs-3 text-primary"></i>
+                            }
+                        </div>
+                        <h5 class="card-title mb-0 fw-bold">@company.Name</h5>
+                    </div>
+                    <div class="card-body px-4 pt-3 pb-3">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                <i class="bi bi-briefcase me-1"></i>@(company.Industry?.IndustryType ?? "Unknown Industry")
+                            </span>
+                            @if (company.Rating.HasValue)
+                            {
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-star-fill text-warning me-1"></i>
+                                    <span class="fw-bold">@company.Rating.Value.ToString("0.0")</span>
+                                </div>
+                            }
+                        </div>
+                        
+                        <div class="mb-3">
+                            @if (!string.IsNullOrEmpty(company.HeadquartersLocation))
+                            {
+                                <p class="card-text small mb-2">
+                                    <i class="bi bi-geo-alt-fill text-primary me-2"></i>@company.HeadquartersLocation
+                                </p>
+                            }
+                            
+                            @if (company.FoundationDate.HasValue)
+                            {
+                                <p class="card-text small mb-2">
+                                    <i class="bi bi-calendar-event text-primary me-2"></i>Founded: @company.FoundationDate.Value.ToString("yyyy")
+                                </p>
+                            }
+                            
+                            @if (company.CompanySize.HasValue)
+                            {
+                                <p class="card-text small mb-0">
+                                    <i class="bi bi-people-fill text-primary me-2"></i>@company.CompanySize employees
+                                </p>
+                            }
+                        </div>
+                        
+                        <div class="description-wrapper mb-3" style="min-height: 60px;">
+                            @if (!string.IsNullOrEmpty(company.Description))
+                            {
+                                <p class="card-text small">
+                                    @(company.Description.Length > 100 ? company.Description.Substring(0, 100) + "..." : company.Description)
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-top p-3">
+                        <div class="d-flex gap-2">
+                            <a asp-action="Details" asp-route-id="@company.Id" class="btn btn-primary flex-grow-1">
+                                <i class="bi bi-building me-2"></i>View Profile
+                            </a>
+                            <a asp-controller="Jobs" asp-action="Search" asp-route-companyId="@company.Id" class="btn btn-outline-primary">
+                                <i class="bi bi-briefcase"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Enhanced hover effect animation for cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card-hover');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                    this.style.transition = 'all 0.3s ease';
+                    this.style.boxShadow = '0 15px 30px rgba(17, 63, 103, 0.15)';
+                    
+                    // Add a subtle glow effect
+                    this.style.filter = 'drop-shadow(0 0 8px rgba(88, 160, 200, 0.3))';
+                    
+                    // Find the header and add more vibrant color
+                    const header = this.querySelector('.card-header');
+                    if (header) {
+                        header.style.transition = 'all 0.3s ease';
+                        header.style.backgroundColor = '#113F67';
+                    }
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 .125rem .25rem rgba(0, 0, 0, .075)';
+                    this.style.filter = 'none';
+                    
+                    // Reset header color
+                    const header = this.querySelector('.card-header');
+                    if (header) {
+                        header.style.backgroundColor = '';
+                    }
+                });
+            });
+        });
+    </script>
+}

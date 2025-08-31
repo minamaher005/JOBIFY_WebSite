@@ -1,0 +1,93 @@
+@model IEnumerable<WebApplication2.Models.SavedJob>
+
+@{
+    ViewData["Title"] = "My Saved Jobs";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>@ViewData["Title"]</h1>
+        <a asp-controller="Jobs" asp-action="Search" class="btn btn-primary">
+            <i class="bi bi-search"></i> Find More Jobs
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <h4 class="alert-heading">No saved jobs!</h4>
+            <p>You haven't saved any jobs yet. Browse our job listings and save jobs that interest you to view them later.</p>
+            <hr>
+            <a asp-controller="Jobs" asp-action="Search" class="btn btn-primary">Find Jobs Now</a>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var savedJob in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@savedJob.Job.JobTitle</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">@savedJob.Job.Company.Name</h6>
+                            
+                            <div class="d-flex flex-wrap mb-3">
+                                <span class="badge bg-light text-dark me-2 mb-1">
+                                    <i class="bi bi-geo-alt"></i> @savedJob.Job.Location.LocationName
+                                </span>
+                                <span class="badge bg-light text-dark me-2 mb-1">
+                                    <i class="bi bi-briefcase"></i> @savedJob.Job.EmploymentType.TypeName
+                                </span>
+                            </div>
+                            
+                            @if (savedJob.Job.SalaryFrom.HasValue && savedJob.Job.SalaryTo.HasValue)
+                            {
+                                <p class="card-text small">
+                                    <i class="bi bi-cash"></i> @savedJob.Job.SalaryFrom.Value.ToString("C0") - @savedJob.Job.SalaryTo.Value.ToString("C0") @savedJob.Job.Currency
+                                </p>
+                            }
+                            
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar"></i> Saved on @(savedJob.SavedDate.HasValue ? savedJob.SavedDate.Value.ToString("MMM dd, yyyy") : DateTime.Now.ToString("MMM dd, yyyy"))
+                                </small>
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between">
+                                <a asp-controller="Jobs" asp-action="Details" asp-route-id="@savedJob.JobId" class="btn btn-sm btn-primary">View Details</a>
+                                
+                                <div class="btn-group">
+                                    <a asp-controller="Applications" asp-action="Apply" asp-route-id="@savedJob.JobId" class="btn btn-sm btn-success">Apply</a>
+                                    <form asp-controller="Jobs" asp-action="UnsaveJob" asp-route-id="@savedJob.JobId" method="post" onsubmit="return confirm('Are you sure you want to remove this job from your saved list?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-bookmark-x"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

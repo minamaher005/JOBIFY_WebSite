@@ -1,0 +1,275 @@
+@model WebApplication2.ViewModels.JobSeekerRegisterViewModel
+
+@{
+    ViewData["Title"] = "Create Job Seeker Profile";
+}
+
+<link rel="stylesheet" href="~/css/form-enhancements.css" />
+
+<div class="container py-5 animate-fade-in">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="modern-form-card mb-4">
+                <div class="gradient-header p-4 text-center">
+                    <h1 class="h2 fw-bold text-white mb-0">@ViewData["Title"]</h1>
+                </div>
+                
+                <form asp-action="Create" method="post" enctype="multipart/form-data" class="p-0">
+                    <div asp-validation-summary="All" class="alert alert-danger my-3 mx-3" role="alert"></div>
+                    
+                    <!-- Account Information Section -->
+                    <div class="form-section p-4">
+                        <h4 class="section-title"><i class="bi bi-shield-lock me-2"></i>Account Information</h4>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control" placeholder="Email" />
+                            <label asp-for="Email">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Password" class="form-control" placeholder="Password" type="password" />
+                                    <label asp-for="Password">Password</label>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password" type="password" />
+                                    <label asp-for="ConfirmPassword">Confirm Password</label>
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Personal Information Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-person-badge me-2"></i>Personal Information</h4>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="FirstName" class="form-control" placeholder="First Name" />
+                                    <label asp-for="FirstName">First Name</label>
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="LastName" class="form-control" placeholder="Last Name" />
+                                    <label asp-for="LastName">Last Name</label>
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" />
+                            <label asp-for="PhoneNumber">Phone Number</label>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="DateOfBirth" class="form-control" placeholder="Date of Birth" type="date" />
+                            <label asp-for="DateOfBirth">Date of Birth</label>
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Location Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-geo-alt me-2"></i>Location</h4>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="City" class="form-control" placeholder="City" />
+                                    <label asp-for="City">City</label>
+                                    <span asp-validation-for="City" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Country" class="form-control" placeholder="Country" />
+                                    <label asp-for="Country">Country</label>
+                                    <span asp-validation-for="Country" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Professional Information Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-briefcase me-2"></i>Professional Information</h4>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Bio" class="form-label">Professional Bio</label>
+                            <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Tell us about your professional experience and career goals"></textarea>
+                            <span asp-validation-for="Bio" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="YearsOfExperience" class="form-control" placeholder="Years of Experience" />
+                            <label asp-for="YearsOfExperience">Years of Experience</label>
+                            <span asp-validation-for="YearsOfExperience" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="UniversityName" class="form-control" placeholder="University Name" />
+                            <label asp-for="UniversityName">University Name</label>
+                            <span asp-validation-for="UniversityName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="EducationLevelId" class="form-label">Education Level</label>
+                            <select asp-for="EducationLevelId" class="form-select"
+                                    asp-items="@(new SelectList(ViewBag.EducationLevels, "Id", "LevelName"))">
+                                <option value="">-- Select Education Level --</option>
+                            </select>
+                            <span asp-validation-for="EducationLevelId" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="SelectedSkills" class="form-label">Skills (Choose from existing)</label>
+                            <select asp-for="SelectedSkills" class="form-select" multiple
+                                    asp-items="Model.AvailableSkills">
+                            </select>
+                            <span asp-validation-for="SelectedSkills" class="text-danger"></span>
+                            <small class="form-text text-muted">Hold Ctrl to select multiple skills</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="ManualSkills" class="form-label">Add Your Own Skills</label>
+                            <input asp-for="ManualSkills" class="form-control" placeholder="e.g. JavaScript, Python, Project Management, Communication Skills" />
+                            <span asp-validation-for="ManualSkills" class="text-danger"></span>
+                            <small class="form-text text-muted">Enter skills separated by commas</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Online Presence Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-globe me-2"></i>Online Presence</h4>
+                        
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="bi bi-linkedin"></i></span>
+                            <div class="form-floating">
+                                <input asp-for="LinkedInUrl" class="form-control" placeholder="LinkedIn URL" />
+                                <label asp-for="LinkedInUrl">LinkedIn URL</label>
+                            </div>
+                            <span asp-validation-for="LinkedInUrl" class="text-danger d-block w-100"></span>
+                        </div>
+                        
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="bi bi-globe2"></i></span>
+                            <div class="form-floating">
+                                <input asp-for="PortfolioUrl" class="form-control" placeholder="Portfolio URL" />
+                                <label asp-for="PortfolioUrl">Portfolio URL</label>
+                            </div>
+                            <span asp-validation-for="PortfolioUrl" class="text-danger d-block w-100"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Documents & Images Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-file-earmark me-2"></i>Documents & Images</h4>
+                        
+                        <div class="mb-3">
+                            <label asp-for="ProfilePicture" class="form-label">Profile Picture</label>
+                            <input asp-for="ProfilePicture" type="file" class="form-control" accept="image/*" />
+                            <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                            <small class="form-text text-muted">Upload a professional photo (JPG, PNG)</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Resume" class="form-label">Resume/CV</label>
+                            <input asp-for="Resume" type="file" class="form-control" accept=".pdf,.doc,.docx" />
+                            <span asp-validation-for="Resume" class="text-danger"></span>
+                            <small class="form-text text-muted">Upload your resume (PDF, DOC, DOCX)</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button Section -->
+                    <div class="form-section p-4 border-top">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn-modern-primary btn-lg">
+                                <i class="bi bi-person-plus-fill me-2"></i>Create Job Seeker Account
+                            </button>
+                            <a asp-controller="Home" asp-action="Index" class="btn-modern-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="modern-form-card mb-4">
+                <div class="gradient-header-secondary p-4 text-center">
+                    <h4 class="fw-bold text-white mb-0">Why Join Our Platform?</h4>
+                </div>
+                
+                <div class="form-section p-4">
+                    <ul class="list-group list-group-flush benefits-list">
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Access to thousands of job opportunities
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Easy application process
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Track your applications in one place
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Save jobs for later
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Get job recommendations based on your skills
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="form-section p-3 text-center border-top">
+                    <p class="mb-0">
+                        <i class="bi bi-info-circle-fill me-2 text-primary"></i>
+                        Already have an account? <a asp-controller="Account" asp-action="Login" class="fw-bold text-decoration-none">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Add animation to form sections
+        document.addEventListener('DOMContentLoaded', function() {
+            const formSections = document.querySelectorAll('.form-section');
+            formSections.forEach((section, index) => {
+                // Add staggered animation delay
+                section.style.animationDelay = `${(index * 0.1) + 0.2}s`;
+                section.classList.add('animate-fade-in');
+            });
+            
+            // Add animation to the submit button on hover
+            const submitBtn = document.querySelector('button[type="submit"]');
+            submitBtn.addEventListener('mouseover', function() {
+                this.classList.add('shadow-sm');
+            });
+            
+            submitBtn.addEventListener('mouseout', function() {
+                this.classList.remove('shadow-sm');
+            });
+        });
+    </script>
+}

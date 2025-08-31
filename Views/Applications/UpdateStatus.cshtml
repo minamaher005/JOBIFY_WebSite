@@ -1,0 +1,79 @@
+@model WebApplication2.Models.Application
+
+@{
+    ViewData["Title"] = "Update Application Status";
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Update Application Status</h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-1">@Model.Job.JobTitle</h5>
+                        <p class="text-muted">@Model.Job.Company.Name</p>
+                        <p><strong>Applicant:</strong> @Model.JobSeeker.FullName</p>
+                        <p><strong>Applied Date:</strong> @Model.AppliedDate?.ToString("MMMM dd, yyyy")</p>
+                        <p><strong>Current Status:</strong> 
+                            <span class="badge @(Model.Status.StatusName switch
+                            {
+                                "Pending" => "bg-warning text-dark",
+                                "Reviewed" => "bg-info text-dark",
+                                "Interview" => "bg-primary",
+                                "Accepted" => "bg-success",
+                                "Rejected" => "bg-danger",
+                                _ => "bg-secondary"
+                            })">
+                                @Model.Status.StatusName
+                            </span>
+                        </p>
+                    </div>
+                    
+                    <hr>
+                    
+                    <form asp-action="UpdateStatus" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        
+                        <div class="mb-3">
+                            <label for="statusId" class="form-label">New Status</label>
+                            <select name="statusId" id="statusId" class="form-select" required>
+                                <option value="">Select new status</option>
+                                @foreach (var status in ViewBag.Statuses)
+                                {
+                                    if (status.Value == Model.StatusId.ToString())
+                                    {
+                                        <option value="@status.Value" selected>@status.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@status.Value">@status.Text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Details
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Update Status
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

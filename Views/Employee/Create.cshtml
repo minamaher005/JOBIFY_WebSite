@@ -1,0 +1,258 @@
+@model WebApplication2.ViewModels.EmployeeCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Employer Account";
+}
+
+<link rel="stylesheet" href="~/css/form-enhancements.css" />
+
+<div class="container py-5 animate-fade-in">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="modern-form-card mb-4">
+                <div class="gradient-header-secondary p-4 text-center">
+                    <h1 class="h2 fw-bold text-white mb-0">@ViewData["Title"]</h1>
+                </div>
+                
+                <form asp-action="Create" asp-controller="Employee" method="post" enctype="multipart/form-data" class="p-0">
+                    <div asp-validation-summary="All" class="alert alert-danger my-3 mx-3" role="alert"></div>
+                    
+                    <!-- Account Information Section -->
+                    <div class="form-section p-4">
+                        <h4 class="section-title"><i class="bi bi-shield-lock me-2"></i>Account Information</h4>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control" placeholder="Email" />
+                            <label asp-for="Email">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Password" class="form-control" placeholder="Password" type="password" />
+                                    <label asp-for="Password">Password</label>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password" type="password" />
+                                    <label asp-for="ConfirmPassword">Confirm Password</label>
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Personal Information Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-person-badge me-2"></i>Personal Information</h4>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="FirstName" class="form-control" placeholder="First Name" />
+                                    <label asp-for="FirstName">First Name</label>
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="LastName" class="form-control" placeholder="Last Name" />
+                                    <label asp-for="LastName">Last Name</label>
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" />
+                            <label asp-for="PhoneNumber">Phone Number</label>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="DateOfBirth" class="form-control" placeholder="Date of Birth" type="date" />
+                            <label asp-for="DateOfBirth">Date of Birth</label>
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="City" class="form-control" placeholder="City" />
+                                    <label asp-for="City">City</label>
+                                    <span asp-validation-for="City" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Country" class="form-control" placeholder="Country" />
+                                    <label asp-for="Country">Country</label>
+                                    <span asp-validation-for="Country" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Bio" class="form-label">Professional Bio</label>
+                            <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Tell us about your professional background and experience"></textarea>
+                            <span asp-validation-for="Bio" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Employment Information Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-briefcase me-2"></i>Employment Information</h4>
+                        
+                        <div class="mb-3">
+                            <label asp-for="CompanyId" class="form-label">Company</label>
+                            <div class="input-group">
+                                <select asp-for="CompanyId" class="form-select" asp-items="Model.AvailableCompanies">
+                                    <option value="">-- Select Company --</option>
+                                </select>
+                                <button type="button" class="btn-modern-primary" data-bs-toggle="modal" data-bs-target="#addCompanyModal">
+                                    <i class="bi bi-building-add"></i> Add
+                                </button>
+                            </div>
+                            <span asp-validation-for="CompanyId" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="RoleId" class="form-label">Role</label>
+                            <select asp-for="RoleId" class="form-select" asp-items="Model.AvailableRoles">
+                                <option value="">-- Select Role --</option>
+                            </select>
+                            <span asp-validation-for="RoleId" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="PositionTitle" class="form-control" placeholder="Position Title" />
+                            <label asp-for="PositionTitle">Position Title</label>
+                            <span asp-validation-for="PositionTitle" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="DateJoined" class="form-control" placeholder="Date Joined" type="date" />
+                            <label asp-for="DateJoined">Date Joined</label>
+                            <span asp-validation-for="DateJoined" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input asp-for="IsActive" class="form-check-input" />
+                            <label asp-for="IsActive" class="form-check-label">Active Account</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Picture Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-image me-2"></i>Profile Picture</h4>
+                        
+                        <div class="mb-3">
+                            <label asp-for="ProfilePicture" class="form-label">Upload Profile Picture</label>
+                            <input asp-for="ProfilePicture" type="file" class="form-control" accept="image/*" />
+                            <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                            <small class="form-text text-muted">Upload a professional photo (JPG, PNG)</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button Section -->
+                    <div class="form-section p-4 border-top">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn-modern-primary btn-lg">
+                                <i class="bi bi-person-plus-fill me-2"></i>Create Employer Account
+                            </button>
+                            <a asp-controller="Home" asp-action="Index" class="btn-modern-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a asp-controller="Account" asp-action="Register" class="text-decoration-none">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Registration Options
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="modern-form-card mb-4">
+                <div class="gradient-header-secondary p-4 text-center">
+                    <h4 class="fw-bold text-white mb-0">Why Register as an Employer?</h4>
+                </div>
+                
+                <div class="form-section p-4">
+                    <ul class="list-group list-group-flush benefits-list">
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Post unlimited job listings
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Access to our candidate database
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Manage all applications in one place
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Brand your company profile
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Analytics and reporting tools
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="form-section p-3 text-center border-top">
+                    <p class="mb-0">
+                        <i class="bi bi-info-circle-fill me-2 text-primary"></i>
+                        Already have an account? <a asp-controller="Account" asp-action="Login" class="fw-bold text-decoration-none">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Company Modal -->
+<div class="modal fade" id="addCompanyModal" tabindex="-1" aria-labelledby="addCompanyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <partial name="_CompanyCreatePartial" model="new WebApplication2.ViewModels.CompanyCreateViewModel { Name = string.Empty, IndustryName = string.Empty }" />
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Add animation to form sections
+        document.addEventListener('DOMContentLoaded', function() {
+            const formSections = document.querySelectorAll('.form-section');
+            formSections.forEach((section, index) => {
+                // Add staggered animation delay
+                section.style.animationDelay = `${(index * 0.1) + 0.2}s`;
+                section.classList.add('animate-fade-in');
+            });
+            
+            // When company is created and modal is closed, refresh the page with the form data preserved
+            $('#addCompanyModal').on('hidden.bs.modal', function () {
+                if (window.companyCreated) {
+                    // Reset the flag
+                    window.companyCreated = false;
+                    
+                    // Refresh the company dropdown with the new company selected
+                    let form = $('form[asp-action="Create"]');
+                    form.submit();
+                }
+            });
+        });
+    </script>
+}

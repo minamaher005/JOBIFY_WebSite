@@ -1,0 +1,147 @@
+@model WebApplication2.ViewModels.JobSeekerEditViewModel
+@{
+    ViewData["Title"] = "Edit Job Seeker Profile";
+}
+
+<div class="container mt-4">
+    <h2>Edit Your Profile</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <!-- Basic Information Section -->
+                <h4>Personal Information</h4>
+                <div class="card mb-4 p-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="FirstName" class="control-label"></label>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="LastName" class="control-label"></label>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="PhoneNumber" class="control-label"></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Bio" class="control-label"></label>
+                        <textarea asp-for="Bio" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <!-- Professional Information Section -->
+                <h4>Professional Information</h4>
+                <div class="card mb-4 p-3">
+                    <div class="form-group mb-3">
+                        <label asp-for="YearsOfExperience" class="control-label"></label>
+                        <input asp-for="YearsOfExperience" class="form-control" />
+                        <span asp-validation-for="YearsOfExperience" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="EducationLevelId" class="control-label"></label>
+                        <select asp-for="EducationLevelId" class="form-control" 
+                                asp-items="@(new SelectList(ViewBag.EducationLevels, "Id", "LevelName"))">
+                            <option value="">-- Select Education Level --</option>
+                        </select>
+                        <span asp-validation-for="EducationLevelId" class="text-danger"></span>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="form-group mb-3">
+                        <label asp-for="SelectedSkills" class="control-label">Skills (Choose from existing)</label>
+                        <select asp-for="SelectedSkills" class="form-select" multiple
+                                asp-items="Model.AvailableSkills">
+                        </select>
+                        <span asp-validation-for="SelectedSkills" class="text-danger"></span>
+                        <small class="form-text text-muted">Hold Ctrl to select multiple skills</small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="ManualSkills" class="control-label">Add Your Own Skills</label>
+                        <input asp-for="ManualSkills" class="form-control" placeholder="e.g. JavaScript, Python, Project Management, Communication Skills" />
+                        <span asp-validation-for="ManualSkills" class="text-danger"></span>
+                        <small class="form-text text-muted">Enter skills separated by commas</small>
+                    </div>
+                </div>
+                
+                <!-- Online Presence Section -->
+                <h4>Online Presence</h4>
+                <div class="card mb-4 p-3">
+                    <div class="form-group mb-3">
+                        <label asp-for="LinkedInUrl" class="control-label"></label>
+                        <input asp-for="LinkedInUrl" class="form-control" />
+                        <span asp-validation-for="LinkedInUrl" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="PortfolioUrl" class="control-label"></label>
+                        <input asp-for="PortfolioUrl" class="form-control" />
+                        <span asp-validation-for="PortfolioUrl" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <!-- File Uploads Section -->
+                <h4>Documents & Images</h4>
+                <div class="card mb-4 p-3">
+                    <div class="form-group mb-3">
+                        <label asp-for="ProfilePicture" class="control-label"></label>
+                        <input asp-for="ProfilePicture" type="file" class="form-control" accept="image/*" />
+                        <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                        @if (!string.IsNullOrEmpty(Model.CurrentProfilePictureUrl))
+                        {
+                            <div class="mt-2">
+                                <img src="@Model.CurrentProfilePictureUrl" alt="Current Profile Picture" class="img-thumbnail" style="max-width: 150px" />
+                                <p class="text-muted">Current Profile Picture</p>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Resume" class="control-label"></label>
+                        <input asp-for="Resume" type="file" class="form-control" accept=".pdf,.doc,.docx" />
+                        <span asp-validation-for="Resume" class="text-danger"></span>
+                        @if (!string.IsNullOrEmpty(Model.CurrentResumeUrl))
+                        {
+                            <div class="mt-2">
+                                <a href="@Model.CurrentResumeUrl" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-file-earmark-text"></i> View Current Resume
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Initialize any plugins for the multi-select dropdown
+        $(document).ready(function() {
+            // You can add a plugin like Select2 here if you want to enhance the skills dropdown
+        });
+    </script>
+}

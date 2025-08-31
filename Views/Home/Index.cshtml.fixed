@@ -1,0 +1,457 @@
+@{
+    ViewData["Title"] = "TechConnect Job Fair 2024";
+}
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+    body {
+        font-family: "Inter", sans-serif;
+    }
+    .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .card-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<!-- Hero Section -->
+<section id="home" class="gradient-bg text-white py-5">
+    <div class="container text-center py-4">
+        <h1 class="display-3 fw-bold mb-4">TechConnect Job Fair 2024</h1>
+        <p class="fs-4 mb-4 opacity-90">Connect with top tech companies and launch your career</p>
+        <div class="d-flex flex-column flex-sm-row gap-4 justify-content-center align-items-center mb-5">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-calendar-event me-2 fs-5"></i>
+                March 15, 2024
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-geo-alt me-2 fs-5"></i>
+                Tech Convention Center
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-clock me-2 fs-5"></i>
+                9:00 AM - 5:00 PM
+            </div>
+        </div>
+        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+            @if (User.Identity != null && !User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn btn-light text-primary px-4 py-3 rounded-3 fw-semibold">
+                    Register Now - Free
+                </a>
+                <a asp-controller="Company" asp-action="Index" class="btn btn-outline-light px-4 py-3 rounded-3 fw-semibold">
+                    View Companies
+                </a>
+            }
+            else
+            {
+                @if (User.IsInRole("JobSeeker"))
+                {
+                    <a asp-controller="JobSeeker" asp-action="Dashboard" class="btn btn-light text-primary px-4 py-3 rounded-3 fw-semibold">
+                        <i class="bi bi-speedometer2 me-2"></i>My Dashboard
+                    </a>
+                    <a asp-controller="Jobs" asp-action="Search" class="btn btn-outline-light px-4 py-3 rounded-3 fw-semibold">
+                        <i class="bi bi-search me-2"></i>Find Jobs
+                    </a>
+                }
+                else if (User.IsInRole("Employee"))
+                {
+                    <a asp-controller="Jobs" asp-action="Index" class="btn btn-light text-primary px-4 py-3 rounded-3 fw-semibold">
+                        <i class="bi bi-briefcase me-2"></i>Manage Jobs
+                    </a>
+                    <a asp-controller="Jobs" asp-action="Create" class="btn btn-outline-light px-4 py-3 rounded-3 fw-semibold">
+                        <i class="bi bi-plus-lg me-2"></i>Post a Job
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-dark mb-3">Why Attend TechConnect?</h2>
+            <p class="fs-5 text-secondary mx-auto" style="max-width: 800px;">
+                The premier technology job fair bringing together innovative companies and talented professionals
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center p-4 card-hover bg-light rounded-4">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-building fs-1 text-primary"></i>
+                    </div>
+                    <h3 class="fs-4 fw-semibold mb-3">50+ Top Companies</h3>
+                    <p class="text-secondary">
+                        Connect with industry leaders from tech, finance, healthcare, and more seeking talented professionals
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4 card-hover bg-light rounded-4">
+                    <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-briefcase fs-1 text-success"></i>
+                    </div>
+                    <h3 class="fs-4 fw-semibold mb-3">1000+ Open Positions</h3>
+                    <p class="text-secondary">
+                        Explore opportunities across all experience levels from entry-level to senior leadership roles
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4 card-hover bg-light rounded-4">
+                    <div class="bg-purple bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-people fs-1 text-purple"></i>
+                    </div>
+                    <h3 class="fs-4 fw-semibold mb-3">On-Site Interviews</h3>
+                    <p class="text-secondary">
+                        Get interviewed on the spot and potentially receive same-day offers from interested employers
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Companies Section -->
+<section id="companies" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-dark mb-3">Featured Companies</h2>
+            <p class="fs-5 text-secondary">
+                Meet with hiring managers from these amazing companies
+            </p>
+        </div>
+        <div class="row g-4" id="companiesGrid">
+            @{
+                var featuredCompanies = new[]
+                {
+                    new { Name = "TechCorp", Logo = "🚀", Positions = 15, Description = "Leading cloud infrastructure company" },
+                    new { Name = "DataFlow", Logo = "📊", Positions = 8, Description = "AI and machine learning solutions" },
+                    new { Name = "CodeCraft", Logo = "💻", Positions = 12, Description = "Custom software development" },
+                    new { Name = "CloudNine", Logo = "☁️", Positions = 20, Description = "Enterprise cloud services" },
+                    new { Name = "InnovateLab", Logo = "🔬", Positions = 6, Description = "Research and development" },
+                    new { Name = "PixelPerfect", Logo = "🎨", Positions = 10, Description = "Digital design and UX" }
+                };
+                
+                foreach (var company in featuredCompanies)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm card-hover">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="fs-1 me-3">@company.Logo</div>
+                                    <div>
+                                        <h3 class="fs-5 fw-bold mb-1">@company.Name</h3>
+                                        <p class="text-muted mb-0">@company.Positions open positions</p>
+                                    </div>
+                                </div>
+                                <p class="card-text">@company.Description</p>
+                                <a asp-controller="Company" asp-action="Index" class="btn btn-outline-primary mt-2">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="text-center mt-5">
+            <a asp-controller="Company" asp-action="Index" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
+                <i class="bi bi-building me-2"></i>View All Companies
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Schedule Section -->
+<section id="schedule" class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-dark mb-3">Event Schedule</h2>
+            <p class="fs-5 text-secondary">
+                Plan your day at TechConnect Job Fair
+            </p>
+        </div>
+        <div class="mx-auto" style="max-width: 800px;">
+            <div class="d-flex flex-column gap-4">
+                <div class="d-flex p-4 bg-light rounded-3 shadow-sm">
+                    <div class="text-center me-4">
+                        <div class="bg-primary text-white rounded-3 p-2" style="min-width: 80px;">
+                            <span class="fw-bold">9:00 AM</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="fs-5 fw-bold mb-2">Registration & Welcome</h3>
+                        <p class="text-secondary mb-0">Check-in, collect your badge, and enjoy refreshments</p>
+                    </div>
+                </div>
+
+                <div class="d-flex p-4 bg-light rounded-3 shadow-sm">
+                    <div class="text-center me-4">
+                        <div class="bg-primary text-white rounded-3 p-2" style="min-width: 80px;">
+                            <span class="fw-bold">10:00 AM</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="fs-5 fw-bold mb-2">Opening Keynote</h3>
+                        <p class="text-secondary mb-0">Industry insights and job market trends presentation</p>
+                    </div>
+                </div>
+
+                <div class="d-flex p-4 bg-primary bg-opacity-10 rounded-3 shadow-sm border border-2 border-primary">
+                    <div class="text-center me-4">
+                        <div class="bg-primary text-white rounded-3 p-2" style="min-width: 80px;">
+                            <span class="fw-bold">11:00 AM</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="fs-5 fw-bold mb-2">Job Fair Open Floor</h3>
+                        <p class="text-secondary mb-0">Connect with companies, submit resumes, and participate in on-the-spot interviews</p>
+                    </div>
+                </div>
+
+                <div class="d-flex p-4 bg-light rounded-3 shadow-sm">
+                    <div class="text-center me-4">
+                        <div class="bg-primary text-white rounded-3 p-2" style="min-width: 80px;">
+                            <span class="fw-bold">1:00 PM</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="fs-5 fw-bold mb-2">Networking Lunch</h3>
+                        <p class="text-secondary mb-0">Complimentary lunch and structured networking opportunities</p>
+                    </div>
+                </div>
+
+                <div class="d-flex p-4 bg-light rounded-3 shadow-sm">
+                    <div class="text-center me-4">
+                        <div class="bg-primary text-white rounded-3 p-2" style="min-width: 80px;">
+                            <span class="fw-bold">2:30 PM</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="fs-5 fw-bold mb-2">Tech Talks & Workshops</h3>
+                        <p class="text-secondary mb-0">Industry experts share insights on career development and tech trends</p>
+                    </div>
+                </div>
+
+                <div class="d-flex p-4 bg-light rounded-3 shadow-sm">
+                    <div class="text-center me-4">
+                        <div class="bg-primary text-white rounded-3 p-2" style="min-width: 80px;">
+                            <span class="fw-bold">4:30 PM</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="fs-5 fw-bold mb-2">Closing Remarks & Raffle</h3>
+                        <p class="text-secondary mb-0">Event wrap-up and prize drawing for registered attendees</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Registration Section -->
+<section id="register" class="py-5 gradient-bg text-white">
+    <div class="container" style="max-width: 800px;">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Register for Free</h2>
+            <p class="fs-5 opacity-90">
+                Secure your spot at TechConnect Job Fair 2024
+            </p>
+        </div>
+        <div class="bg-white rounded-4 p-4 p-md-5 text-dark shadow">
+            <form asp-controller="Account" asp-action="Register" method="get" class="space-y-4">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control form-control-lg" id="firstName" name="firstName" placeholder="Enter your first name">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control form-control-lg" id="lastName" name="lastName" placeholder="Enter your last name">
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="you@example.com">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control form-control-lg" id="phone" name="phone" placeholder="Your phone number">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="experience" class="form-label">Professional Experience</label>
+                    <select class="form-select form-select-lg" id="experience" name="experience">
+                        <option value="" selected disabled>Select your experience level</option>
+                        <option value="student">Student/Recent Graduate</option>
+                        <option value="1-3">1-3 years</option>
+                        <option value="4-7">4-7 years</option>
+                        <option value="8+">8+ years</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="interests" class="form-label">Areas of Interest</label>
+                    <select class="form-select form-select-lg" id="interests" name="interests">
+                        <option value="" selected disabled>Select your primary interest</option>
+                        <option value="software">Software Development</option>
+                        <option value="data">Data Science/Analytics</option>
+                        <option value="design">UX/UI Design</option>
+                        <option value="product">Product Management</option>
+                        <option value="marketing">Digital Marketing</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="termsAgree" name="termsAgree" required>
+                    <label class="form-check-label" for="termsAgree">
+                        I agree to the Terms & Conditions and Privacy Policy
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-semibold">
+                    <i class="bi bi-check-circle me-2"></i>Complete Registration
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Additional Info Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <h3 class="fs-4 fw-bold mb-3"><i class="bi bi-info-circle text-primary me-2"></i>About TechConnect</h3>
+                        <p>TechConnect Job Fair is an annual event that brings together leading technology companies and talented professionals. Whether you're a recent graduate, an experienced professional, or looking to make a career transition into tech, this event offers something for everyone.</p>
+                        <p>Our mission is to connect job seekers with meaningful career opportunities and help companies find the perfect candidates to fuel their growth.</p>
+                        <div class="d-flex mt-4">
+                            <a asp-controller="Home" asp-action="Privacy" class="btn btn-outline-primary me-3">
+                                <i class="bi bi-shield-check me-2"></i>Privacy Policy
+                            </a>
+                            <a href="mailto:info@techconnectjobfair.com" class="btn btn-outline-primary">
+                                <i class="bi bi-envelope me-2"></i>Contact Us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <h3 class="fs-4 fw-bold mb-3"><i class="bi bi-check-circle text-primary me-2"></i>For Job Seekers</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Connect with 50+ leading tech companies</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Explore 1000+ open positions</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Participate in on-site interviews</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Attend career development workshops</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Network with industry professionals</li>
+                        </ul>
+                        @if (User.Identity != null && !User.Identity.IsAuthenticated)
+                        {
+                            <div class="mt-4">
+                                <a asp-controller="Account" asp-action="RegisterJobSeeker" class="btn btn-primary">
+                                    <i class="bi bi-person-plus me-2"></i>Register as Job Seeker
+                                </a>
+                            </div>
+                        }
+                        else if (User.IsInRole("JobSeeker"))
+                        {
+                            <div class="mt-4">
+                                <a asp-controller="Jobs" asp-action="Search" class="btn btn-primary">
+                                    <i class="bi bi-search me-2"></i>Browse Jobs
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Employer Section -->
+@if (User.Identity != null && !User.Identity.IsAuthenticated)
+{
+    <section class="py-5 bg-primary bg-opacity-10">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h2 class="display-6 fw-bold text-primary mb-3">Are You an Employer?</h2>
+                    <p class="fs-5 mb-4">Join TechConnect as an employer and connect with thousands of talented professionals. Our platform offers powerful tools to help you find the perfect candidates for your open positions.</p>
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Post unlimited job listings</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Search our database of qualified candidates</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Manage applications efficiently</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Showcase your company brand</li>
+                    </ul>
+                    <a asp-controller="Account" asp-action="RegisterEmployee" class="btn btn-primary btn-lg">
+                        <i class="bi bi-building me-2"></i>Register as Employer
+                    </a>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block text-center">
+                    <img src="https://via.placeholder.com/500x400?text=Employer+Tools" alt="Employer Tools Illustration" class="img-fluid rounded-3 shadow" />
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else if (User.IsInRole("Employee"))
+{
+    <section class="py-5 bg-primary bg-opacity-10">
+        <div class="container">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="fs-4 fw-bold mb-3"><i class="bi bi-briefcase-fill text-primary me-2"></i>Employer Tools</h3>
+                    <p>Manage your job listings and candidate applications with our comprehensive employer tools.</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a asp-controller="Jobs" asp-action="Create" class="btn btn-primary">
+                            <i class="bi bi-plus-lg me-2"></i>Post New Job
+                        </a>
+                        <a asp-controller="Applications" asp-action="AllApplications" class="btn btn-outline-primary">
+                            <i class="bi bi-file-earmark-text me-2"></i>View Applications
+                        </a>
+                        <a asp-controller="Employee" asp-action="Dashboard" class="btn btn-outline-primary">
+                            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script>
+        // Smooth scrolling for anchor links
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

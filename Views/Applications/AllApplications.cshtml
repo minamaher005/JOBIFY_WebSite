@@ -1,0 +1,120 @@
+@model IEnumerable<WebApplication2.Models.Application>
+
+@{
+    ViewData["Title"] = "All Applications";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>All Job Applications</h1>
+        <a asp-controller="Jobs" asp-action="MyJobs" class="btn btn-primary">
+            <i class="bi bi-briefcase"></i> Manage My Jobs
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h5 class="mb-0">Application Summary</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" id="applicationSearch" class="form-control" placeholder="Search applications..." />
+                            <button class="btn btn-outline-secondary" type="button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Applicant</th>
+                                <th>Applied Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var application in Model)
+                            {
+                                <tr>
+                                    <td>@application.Job.JobTitle</td>
+                                    <td>@application.JobSeeker.FullName</td>
+                                    <td>@(application.AppliedDate?.ToString("MMM dd, yyyy") ?? "N/A")</td>
+                                    <td>
+                                        @{
+                                            var statusClass = application.Status.StatusName switch
+                                            {
+                                                "Pending" => "bg-warning text-dark",
+                                                "Reviewed" => "bg-info text-dark",
+                                                "Interview" => "bg-primary",
+                                                "Accepted" => "bg-success",
+                                                "Rejected" => "bg-danger",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @statusClass">@application.Status.StatusName</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a asp-controller="Applications" asp-action="Details" asp-route-id="@application.Id" class="btn btn-sm btn-outline-primary">View</a>
+                                            <a asp-controller="Applications" asp-action="UpdateStatus" asp-route-id="@application.Id" class="btn btn-sm btn-outline-success">Update Status</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <h4 class="alert-heading">No applications found!</h4>
+            <p>There are no applications for the jobs you've posted. When job seekers apply, they'll appear here.</p>
+            <hr>
+            <a asp-controller="Jobs" asp-action="Create" class="btn btn-primary">Post a New Job</a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Simple client-side search for applications
+        $(document).ready(function() {
+            $("#applicationSearch").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("tbody tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+}

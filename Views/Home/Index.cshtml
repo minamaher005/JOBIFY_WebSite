@@ -1,0 +1,419 @@
+﻿@{
+    ViewData["Title"] = "Job Portal";
+    ViewData["TransparentBackground"] = "true";
+}
+
+<!-- Hero Section -->
+<section id="home" class="bg-gradient-primary text-white py-5">
+    <div class="container text-center py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-3 fw-bold mb-4">Find Your Dream Job Today</h1>
+                <p class="fs-4 mb-4 opacity-90">Connect with top employers and launch your career</p>
+                
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                    @if (User.Identity != null && !User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-warning text-primary px-4 py-3 rounded-3 fw-semibold btn-with-icon">
+                            <i class="bi bi-person-plus"></i> Register Now
+                        </a>
+                        <a asp-controller="Jobs" asp-action="Search" class="btn btn-outline-light px-4 py-3 rounded-3 fw-semibold btn-with-icon">
+                            <i class="bi bi-search"></i> Browse Jobs
+                        </a>
+                    }
+            else
+            {
+                @if (User.IsInRole("JobSeeker"))
+                {
+                    <a asp-controller="JobSeeker" asp-action="Dashboard" class="btn btn-warning text-primary px-4 py-3 rounded-3 fw-semibold btn-with-icon">
+                        <i class="bi bi-speedometer2 me-2"></i>My Dashboard
+                    </a>
+                    <a asp-controller="Jobs" asp-action="Search" class="btn btn-outline-light px-4 py-3 rounded-3 fw-semibold btn-with-icon">
+                        <i class="bi bi-search me-2"></i>Find Jobs
+                    </a>
+                }
+                else if (User.IsInRole("Employee"))
+                {
+                    <a asp-controller="Jobs" asp-action="Index" class="btn btn-warning text-primary px-4 py-3 rounded-3 fw-semibold btn-with-icon">
+                        <i class="bi bi-briefcase me-2"></i>Manage Jobs
+                    </a>
+                    <a asp-controller="Jobs" asp-action="Create" class="btn btn-outline-light px-4 py-3 rounded-3 fw-semibold btn-with-icon">
+                        <i class="bi bi-plus-lg me-2"></i>Post a Job
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="about" class="py-5 angled-section">
+    <div class="container main-container">
+        <div class="text-center mb-5 section-title">
+            <h2 class="display-5 fw-bold text-dark mb-3">Why Choose Our Job Portal?</h2>
+            <p class="fs-5 text-secondary mx-auto" style="max-width: 800px;">
+                The premier platform connecting talented professionals with top employers
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center p-4 card-hover bg-light rounded-4">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-building fs-1 text-primary"></i>
+                    </div>
+                    <h3 class="fs-4 fw-semibold mb-3">Top Employers</h3>
+                    <p class="text-secondary">
+                        Connect with industry leaders from tech, finance, healthcare, and more seeking talented professionals
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4 card-hover bg-light rounded-4">
+                    <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-briefcase fs-1 text-success"></i>
+                    </div>
+                    <h3 class="fs-4 fw-semibold mb-3">Thousands of Jobs</h3>
+                    <p class="text-secondary">
+                        Explore opportunities across all experience levels from entry-level to senior leadership roles
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4 card-hover bg-light rounded-4">
+                    <div class="bg-purple bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <i class="bi bi-person-check fs-1 text-purple"></i>
+                    </div>
+                    <h3 class="fs-4 fw-semibold mb-3">Easy Application</h3>
+                    <p class="text-secondary">
+                        Apply to multiple jobs with just a few clicks and track your application status
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Jobs Section -->
+<section id="featured-jobs" class="py-5">
+    <div class="container main-container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-dark mb-3">Featured Jobs</h2>
+            <p class="fs-5 text-secondary">
+                Discover top opportunities from leading companies
+            </p>
+        </div>
+        <div class="row g-4" id="featuredJobsGrid">
+            @* Jobs will be populated from the database *@
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm card-hover glass-effect">
+                    <div class="card-body p-4">
+                        <h3 class="fs-5 fw-bold mb-2">Software Developer</h3>
+                        <p class="text-muted">Tech Solutions Inc.</p>
+                        <div class="d-flex gap-3 mb-3">
+                            <span class="badge bg-light text-dark"><i class="bi bi-geo-alt me-1"></i>Remote</span>
+                            <span class="badge bg-light text-dark"><i class="bi bi-briefcase me-1"></i>Full-time</span>
+                        </div>
+                        <p class="card-text">Join our team developing cutting-edge software solutions for enterprise clients.</p>
+                        <a href="#" class="btn btn-outline-primary mt-2">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm card-hover glass-effect">
+                    <div class="card-body p-4">
+                        <h3 class="fs-5 fw-bold mb-2">Marketing Specialist</h3>
+                        <p class="text-muted">Global Marketing Co.</p>
+                        <div class="d-flex gap-3 mb-3">
+                            <span class="badge bg-light text-dark"><i class="bi bi-geo-alt me-1"></i>New York</span>
+                            <span class="badge bg-light text-dark"><i class="bi bi-briefcase me-1"></i>Full-time</span>
+                        </div>
+                        <p class="card-text">Lead digital marketing campaigns and grow our client's online presence.</p>
+                        <a href="#" class="btn btn-outline-primary mt-2">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm card-hover glass-effect">
+                    <div class="card-body p-4">
+                        <h3 class="fs-5 fw-bold mb-2">UX/UI Designer</h3>
+                        <p class="text-muted">Creative Designs Ltd.</p>
+                        <div class="d-flex gap-3 mb-3">
+                            <span class="badge bg-light text-dark"><i class="bi bi-geo-alt me-1"></i>San Francisco</span>
+                            <span class="badge bg-light text-dark"><i class="bi bi-briefcase me-1"></i>Contract</span>
+                        </div>
+                        <p class="card-text">Create beautiful and intuitive user interfaces for web and mobile applications.</p>
+                        <a href="#" class="btn btn-outline-primary mt-2">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <a asp-controller="Jobs" asp-action="Search" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
+                <i class="bi bi-search me-2"></i>Browse All Jobs
+            </a>
+        </div>
+    </div>
+</section>
+<!-- Quick Search Section -->
+<!-- Quick Search Section -->
+<section id="quick-search" class="py-5 angled-section">
+    <div class="container">
+        <div class="text-center mb-5 section-title">
+            <h2 class="display-5 fw-bold text-dark mb-3">Quick Job Search</h2>
+            <p class="fs-5 text-secondary">
+                Find your next opportunity in seconds
+            </p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form asp-controller="Jobs" asp-action="Search" method="get" class="card shadow-sm glass-effect">
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" name="searchTerm" class="form-control form-control-lg" placeholder="Job title, keywords, or company">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select name="locationId" class="form-select form-select-lg">
+                                    <option value="">All Locations</option>
+                                    <!-- Locations will be populated from the database -->
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="row mt-5 g-4 justify-content-center">
+            <div class="col-md-3 text-center">
+                <div class="bg-light p-4 rounded-4 card-hover">
+                    <i class="bi bi-code-square fs-1 text-primary mb-3"></i>
+                    <h3 class="fs-5 fw-semibold">Technology</h3>
+                    <p class="text-secondary mb-3">Software, IT, Data</p>
+                    <a asp-controller="Jobs" asp-action="Search" asp-route-categoryId="1" class="btn btn-outline-primary btn-sm" data-category="1">Browse Jobs</a>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="bg-light p-4 rounded-4 card-hover">
+                    <i class="bi bi-graph-up fs-1 text-success mb-3"></i>
+                    <h3 class="fs-5 fw-semibold">Business</h3>
+                    <p class="text-secondary mb-3">Marketing, Sales, Finance</p>
+                    <a asp-controller="Jobs" asp-action="Search" asp-route-categoryId="2" class="btn btn-outline-primary btn-sm" data-category="2">Browse Jobs</a>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="bg-light p-4 rounded-4 card-hover">
+                    <i class="bi bi-palette fs-1 text-purple mb-3"></i>
+                    <h3 class="fs-5 fw-semibold">Creative</h3>
+                    <p class="text-secondary mb-3">Design, Media, Art</p>
+                    <a asp-controller="Jobs" asp-action="Search" asp-route-categoryId="3" class="btn btn-outline-primary btn-sm" data-category="3">Browse Jobs</a>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="bg-light p-4 rounded-4 card-hover">
+                    <i class="bi bi-heart-pulse fs-1 text-danger mb-3"></i>
+                    <h3 class="fs-5 fw-semibold">Healthcare</h3>
+                    <p class="text-secondary mb-3">Medical, Nursing, Pharmacy</p>
+                    <a asp-controller="Jobs" asp-action="Search" asp-route-categoryId="4" class="btn btn-outline-primary btn-sm" data-category="4">Browse Jobs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section id="cta" class="py-5 bg-gradient-primary text-white">
+    <div class="container text-center" style="max-width: 800px;">
+        <h2 class="display-5 fw-bold mb-3">Ready to Find Your Dream Job?</h2>
+        <p class="fs-5 opacity-90 mb-4">
+            Create your profile today and start applying to thousands of jobs
+        </p>
+        
+        @if (User.Identity != null && !User.Identity.IsAuthenticated)
+        {
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-light text-primary px-4 py-3 rounded-3 fw-semibold">
+                    <i class="bi bi-person-plus me-2"></i>Create Account
+                </a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light px-4 py-3 rounded-3 fw-semibold">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                </a>
+            </div>
+        }
+        else
+        {
+            <a asp-controller="Jobs" asp-action="Search" class="btn btn-light text-primary px-4 py-3 rounded-3 fw-semibold">
+                <i class="bi bi-search me-2"></i>Browse Available Jobs
+            </a>
+        }
+    </div>
+</section>
+<!-- Additional Info Section -->
+<section class="py-5">
+    <div class="container main-container">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100 glass-effect">
+                    <div class="card-body p-4">
+                        <h3 class="fs-4 fw-bold mb-3"><i class="bi bi-info-circle text-primary me-2"></i>About Our Job Portal</h3>
+                        <p>Our Job Portal is a leading platform that connects talented professionals with top employers across various industries. Whether you're a recent graduate, an experienced professional, or looking to make a career transition, our platform offers opportunities for everyone.</p>
+                        <p>Our mission is to connect job seekers with meaningful career opportunities and help companies find the perfect candidates to fuel their growth.</p>
+                        <div class="d-flex mt-4">
+                            <a asp-controller="Home" asp-action="Privacy" class="btn btn-outline-primary me-3">
+                                <i class="bi bi-shield-check me-2"></i>Privacy Policy
+                            </a>
+                            <a href="mailto:support@jobportal.com" class="btn btn-outline-primary">
+                                <i class="bi bi-envelope me-2"></i>Contact Us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100 glass-effect">
+                    <div class="card-body p-4">
+                        <h3 class="fs-4 fw-bold mb-3"><i class="bi bi-building text-primary me-2"></i>For Employers</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Post unlimited job listings</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Search our database of qualified candidates</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Manage applications efficiently</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Showcase your company brand</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Track application analytics</li>
+                        </ul>
+                        @if (User.Identity != null && !User.Identity.IsAuthenticated)
+                        {
+                            <div class="mt-4">
+                                <a asp-controller="Account" asp-action="RegisterEmployee" class="btn btn-primary">
+                                    <i class="bi bi-building me-2"></i>Register as Employer
+                                </a>
+                            </div>
+                        }
+                        else if (User.IsInRole("Employee"))
+                        {
+                            <div class="mt-4">
+                                <a asp-controller="Jobs" asp-action="Create" class="btn btn-primary">
+                                    <i class="bi bi-plus-lg me-2"></i>Post a Job
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-4 mt-4">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100 glass-effect">
+                    <div class="card-body p-4">
+                        <h3 class="fs-4 fw-bold mb-3"><i class="bi bi-check-circle text-primary me-2"></i>For Job Seekers</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Create a professional profile</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Upload your resume and get noticed</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Apply to jobs with a single click</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Track your application status</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Get job recommendations</li>
+                        </ul>
+                        @if (User.Identity != null && !User.Identity.IsAuthenticated)
+                        {
+                            <div class="mt-4">
+                                <a asp-controller="Account" asp-action="RegisterJobSeeker" class="btn btn-primary">
+                                    <i class="bi bi-person-plus me-2"></i>Register as Job Seeker
+                                </a>
+                            </div>
+                        }
+                        else if (User.IsInRole("JobSeeker"))
+                        {
+                            <div class="mt-4">
+                                <a asp-controller="Jobs" asp-action="Search" class="btn btn-primary">
+                                    <i class="bi bi-search me-2"></i>Browse Jobs
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100 glass-effect">
+                    <div class="card-body p-4">
+                        <h3 class="fs-4 fw-bold mb-3"><i class="bi bi-shield-check text-primary me-2"></i>Why Trust Our Platform</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Verified employers and job listings</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Secure personal data protection</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Spam-free job application process</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Regular updates on new opportunities</li>
+                            <li class="mb-2"><i class="bi bi-check-lg text-success me-2"></i>Dedicated customer support</li>
+                        </ul>
+                        <div class="mt-4">
+                            <a asp-controller="Home" asp-action="About" class="btn btn-primary">
+                                <i class="bi bi-info-circle me-2"></i>Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Employer Section -->
+@if (User.Identity != null && !User.Identity.IsAuthenticated)
+{
+    @* <section class="py-5 bg-primary bg-opacity-10">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h2 class="display-6 fw-bold text-primary mb-3">Are You an Employer?</h2>
+                    <p class="fs-5 mb-4">Join our platform as an employer and connect with thousands of talented professionals. Our platform offers powerful tools to help you find the perfect candidates for your open positions.</p>
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Post unlimited job listings</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Search our database of qualified candidates</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Manage applications efficiently</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Showcase your company brand</li>
+                    </ul>
+                    <a asp-controller="Account" asp-action="RegisterEmployee" class="btn btn-primary btn-lg">
+                        <i class="bi bi-building me-2"></i>Register as Employer
+                    </a>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block text-center">
+                    <img src="~/images/employer-tools.jpg" alt="Employer Tools Illustration" class="img-fluid rounded-3 shadow" onerror="this.src='https://via.placeholder.com/500x400?text=Employer+Tools'" />
+                </div>
+            </div>
+        </div>
+    </section> *@
+}
+else if (User.IsInRole("Employee"))
+{
+    <section class="py-5 angled-section">
+        <div class="container">
+            <div class="card border-0 shadow-sm glass-effect">
+                <div class="card-body p-4">
+                    <h3 class="fs-4 fw-bold mb-3"><i class="bi bi-briefcase-fill text-primary me-2"></i>Employer Tools</h3>
+                    <p>Manage your job listings and candidate applications with our comprehensive employer tools.</p>
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+                        <a asp-controller="Jobs" asp-action="Create" class="btn btn-primary">
+                            <i class="bi bi-plus-lg me-2"></i>Post New Job
+                        </a>
+                        <a asp-controller="Applications" asp-action="AllApplications" class="btn btn-outline-primary">
+                            <i class="bi bi-file-earmark-text me-2"></i>View Applications
+                        </a>
+                        <a asp-controller="Employee" asp-action="Dashboard" class="btn btn-outline-primary">
+                            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script src="~/js/home.js"></script>
+}

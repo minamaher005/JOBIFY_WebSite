@@ -1,0 +1,134 @@
+@model WebApplication2.ViewModels.JobSearchViewModel
+
+@{
+    ViewData["Title"] = "Search Jobs";
+}
+
+<!-- Search Header Section -->
+<section class="gradient-bg text-white py-4">
+    <div class="container">
+        <h1 class="display-5 fw-bold mb-3">Find Your Next Opportunity</h1>
+        <p class="fs-5 opacity-90">Search through thousands of jobs from top employers</p>
+    </div>
+</section>
+
+<div class="container py-5">
+    <!-- Advanced Search Card -->
+    <div class="card border-0 shadow-sm mb-5">
+        <div class="card-body p-4">
+            <h2 class="fs-4 fw-bold mb-3"><i class="bi bi-search text-primary me-2"></i>Advanced Job Search</h2>
+            <form asp-action="Search" method="get" class="row g-3">
+                <div class="col-md-5">
+                    <label for="searchTerm" class="form-label">Search Keywords</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" id="searchTerm" name="searchTerm" value="@Model.SearchTerm" placeholder="Job title, keywords, or company">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="locationId" class="form-label">Location</label>
+                    <select class="form-select" id="locationId" name="locationId" asp-items="ViewBag.Locations">
+                        <option value="">All Locations</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="employmentTypeId" class="form-label">Job Type</label>
+                    <select class="form-select" id="employmentTypeId" name="employmentTypeId" asp-items="ViewBag.EmploymentTypes">
+                        <option value="">All Types</option>
+                    </select>
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <h2 class="fs-4 fw-bold mb-4">
+        @if (!string.IsNullOrEmpty(Model.SearchTerm))
+        {
+            <span>Results for "@Model.SearchTerm"</span>
+        }
+        else
+        {
+            <span>Available Jobs</span>
+        }
+        <span class="badge bg-primary rounded-pill ms-2">@Model.Jobs.Count()</span>
+    </h2>
+
+    @if (Model.Jobs.Any())
+    {
+        <div class="row">
+            @foreach (var job in Model.Jobs)
+            {
+                <div class="col-12 mb-3">
+                    <div class="card border-0 shadow-sm card-hover">
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h3 class="fs-5 fw-bold mb-1">@job.JobTitle</h3>
+                                        <span class="badge bg-light text-dark d-md-none">
+                                            <i class="bi bi-clock"></i> @((DateTime.Now - job.PostedDate).Days) days ago
+                                        </span>
+                                    </div>
+                                    <h6 class="card-subtitle mb-3 text-primary">@job.Company.Name</h6>
+                                    
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        <span class="badge bg-light text-dark">
+                                            <i class="bi bi-geo-alt me-1"></i> @job.Location.LocationName
+                                        </span>
+                                        <span class="badge bg-light text-dark">
+                                            <i class="bi bi-briefcase me-1"></i> @job.EmploymentType.TypeName
+                                        </span>
+                                        @if (job.SalaryFrom > 0 && job.SalaryTo > 0)
+                                        {
+                                            <span class="badge bg-light text-dark">
+                                                <i class="bi bi-cash me-1"></i> @job.SalaryFrom - @job.SalaryTo @job.Currency
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <p class="card-text mb-3">
+                                        @if (!string.IsNullOrEmpty(job.Requirements))
+                                        {
+                                            @(job.Requirements.Length > 200 ? job.Requirements.Substring(0, 200) + "..." : job.Requirements)
+                                        }
+                                    </p>
+                                </div>
+                                <div class="col-md-4 d-flex flex-column justify-content-between">
+                                    <div class="text-md-end d-none d-md-block mb-3">
+                                        <span class="badge bg-light text-dark p-2">
+                                            <i class="bi bi-clock"></i> @((DateTime.Now - job.PostedDate).Days) days ago
+                                        </span>
+                                    </div>
+                                    <div class="mt-3 text-md-end">
+                                        <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="btn btn-primary">
+                                            <i class="bi bi-eye me-2"></i>View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 text-center">
+                <i class="bi bi-search fs-1 text-primary mb-3"></i>
+                <h4 class="fs-4 fw-bold">No jobs found</h4>
+                <p class="text-secondary mb-4">We couldn't find any jobs matching your search criteria. Try adjusting your search parameters or check back later for new opportunities.</p>
+                <a asp-action="Search" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Search
+                </a>
+            </div>
+        </div>
+    }
+</div>

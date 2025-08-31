@@ -1,0 +1,146 @@
+@model WebApplication2.Models.Job
+
+@{
+    ViewData["Title"] = "Job Details";
+}
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>@Model.JobTitle</h2>
+        <div class="badge bg-info">@Model.JobStatus.StatusName</div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-sm-4">Company</dt>
+                    <dd class="col-sm-8">@Model.Company.Name</dd>
+                    
+                    <dt class="col-sm-4">Location</dt>
+                    <dd class="col-sm-8">@Model.Location.LocationName</dd>
+                    
+                    <dt class="col-sm-4">Employment Type</dt>
+                    <dd class="col-sm-8">@Model.EmploymentType.TypeName</dd>
+                    
+                    <dt class="col-sm-4">Posted Date</dt>
+                    <dd class="col-sm-8">@Model.PostedDate.ToString("MMM dd, yyyy")</dd>
+                    
+                    @if (Model.ApplicationDeadline.HasValue)
+                    {
+                        <dt class="col-sm-4">Application Deadline</dt>
+                        <dd class="col-sm-8">@Model.ApplicationDeadline.Value.ToString("MMM dd, yyyy")</dd>
+                    }
+                    
+                    @if (Model.RequiredExperienceYears.HasValue)
+                    {
+                        <dt class="col-sm-4">Required Experience</dt>
+                        <dd class="col-sm-8">@Model.RequiredExperienceYears @(Model.RequiredExperienceYears == 1 ? "year" : "years")</dd>
+                    }
+                    
+                    @if (Model.SalaryFrom.HasValue && Model.SalaryTo.HasValue)
+                    {
+                        <dt class="col-sm-4">Salary Range</dt>
+                        <dd class="col-sm-8">@Model.SalaryFrom.Value.ToString("N0") - @Model.SalaryTo.Value.ToString("N0") @Model.Currency</dd>
+                    }
+                    else if (Model.SalaryFrom.HasValue)
+                    {
+                        <dt class="col-sm-4">Salary From</dt>
+                        <dd class="col-sm-8">@Model.SalaryFrom.Value.ToString("N0") @Model.Currency</dd>
+                    }
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">Job Stats</div>
+                    <div class="card-body">
+                        <p><strong>Applications:</strong> @Model.Applications.Count</p>
+                        <p><strong>Saves:</strong> @Model.SavedJobs.Count</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Requirements))
+        {
+            <div class="mt-4">
+                <h3>Requirements</h3>
+                <div class="card">
+                    <div class="card-body">
+                        @Html.Raw(Model.Requirements.Replace("\n", "<br />"))
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Benefits))
+        {
+            <div class="mt-4">
+                <h3>Benefits</h3>
+                <div class="card">
+                    <div class="card-body">
+                        @Html.Raw(Model.Benefits.Replace("\n", "<br />"))
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="card-footer">
+        <div class="d-flex justify-content-between">
+            <div class="btn-group" role="group">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    @if (User.IsInRole("Employee"))
+                    {
+                        @if (ViewBag.IsJobOwner)
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+                        }
+                    }
+                    else if (User.IsInRole("JobSeeker"))
+                    {
+                        <a asp-controller="Applications" asp-action="Apply" asp-route-id="@Model.Id" class="btn btn-primary">Apply Now</a>
+                        
+                        @if (ViewBag.IsSaved != null && ViewBag.IsSaved)
+                        {
+                            <form asp-action="UnsaveJob" asp-route-id="@Model.Id" method="post" class="ms-2">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="bi bi-bookmark-x"></i> Unsave Job
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="SaveJob" asp-route-id="@Model.Id" method="post" class="ms-2">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="bi bi-bookmark-plus"></i> Save Job
+                                </button>
+                            </form>
+                        }
+                    }
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Login to Apply</a>
+                }
+            </div>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["ErrorMessage"]
+    </div>
+}

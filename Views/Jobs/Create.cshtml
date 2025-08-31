@@ -1,0 +1,183 @@
+@model WebApplication2.ViewModels.JobCreateVM
+
+@{
+    ViewData["Title"] = "Create Job";
+}
+
+<link rel="stylesheet" href="~/css/form-enhancements.css" />
+
+<div class="container py-5 animate-fade-in">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="modern-form-card">
+                <div class="gradient-header-secondary p-4 text-center">
+                    <h1 class="h2 fw-bold text-white mb-0">Create New Job Posting</h1>
+                </div>
+                
+                <form asp-action="Create" method="post" class="p-0">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger my-3 mx-3" role="alert"></div>
+                    
+                    <!-- Basic Job Information Section -->
+                    <div class="form-section p-4">
+                        <h4 class="section-title"><i class="bi bi-briefcase me-2"></i>Basic Job Information</h4>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="JobTitle" class="form-control" placeholder="Job Title" />
+                            <label asp-for="JobTitle">Job Title</label>
+                            <span asp-validation-for="JobTitle" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="LocationText" class="form-control" placeholder="Location" />
+                                    <label>Location</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="EmploymentTypeText" class="form-control" placeholder="Employment Type" />
+                                    <label>Employment Type</label>
+                                    <small class="form-text text-muted">e.g. Full-time, Part-time, Contract</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Requirements & Compensation Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-cash-coin me-2"></i>Requirements & Compensation</h4>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="RequiredExperienceYears" class="form-control" placeholder="Experience (Years)" />
+                                    <label asp-for="RequiredExperienceYears">Experience (Years)</label>
+                                    <span asp-validation-for="RequiredExperienceYears" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="SalaryFrom" class="form-control" placeholder="Salary From" />
+                                    <label asp-for="SalaryFrom">Salary From</label>
+                                    <span asp-validation-for="SalaryFrom" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="SalaryTo" class="form-control" placeholder="Salary To" />
+                                    <label asp-for="SalaryTo">Salary To</label>
+                                    <span asp-validation-for="SalaryTo" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Currency" class="form-control" placeholder="Currency" />
+                                    <label asp-for="Currency">Currency</label>
+                                    <span asp-validation-for="Currency" class="text-danger"></span>
+                                    <small class="form-text text-muted">USD, EUR, etc.</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="ApplicationDeadline" class="form-control" type="date" placeholder="Application Deadline" />
+                                    <label asp-for="ApplicationDeadline">Application Deadline</label>
+                                    <span asp-validation-for="ApplicationDeadline" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Job Details Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-card-list me-2"></i>Job Details</h4>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Requirements" class="form-label">Job Requirements</label>
+                            <textarea asp-for="Requirements" class="form-control" rows="5" placeholder="List all job requirements, skills, and qualifications needed"></textarea>
+                            <span asp-validation-for="Requirements" class="text-danger"></span>
+                            <small class="form-text text-muted">Be clear about both required and preferred qualifications</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Benefits" class="form-label">Benefits & Perks</label>
+                            <textarea asp-for="Benefits" class="form-control" rows="5" placeholder="List the benefits, perks, and other advantages of this position"></textarea>
+                            <span asp-validation-for="Benefits" class="text-danger"></span>
+                            <small class="form-text text-muted">Highlight what makes this job attractive to candidates</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Section -->
+                    <div class="form-section p-4 border-top">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn-modern-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn-modern-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Create Job
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a asp-action="Index" class="text-decoration-none">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Job Listings
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-md-4 d-none d-lg-block">
+            <div class="modern-form-card mb-4">
+                <div class="gradient-header p-3 text-center">
+                    <h4 class="fw-bold text-white mb-0">Tips for a Great Job Posting</h4>
+                </div>
+                
+                <div class="form-section p-3">
+                    <ul class="list-group list-group-flush benefits-list">
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Be specific about job responsibilities
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Clearly state required vs. preferred skills
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Include salary range to attract qualified candidates
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Highlight company culture and benefits
+                        </li>
+                        <li class="list-group-item border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Use bullet points for better readability
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Add animation to form sections
+        document.addEventListener('DOMContentLoaded', function() {
+            const formSections = document.querySelectorAll('.form-section');
+            formSections.forEach((section, index) => {
+                // Add staggered animation delay
+                section.style.animationDelay = `${(index * 0.1) + 0.2}s`;
+                section.classList.add('animate-fade-in');
+            });
+        });
+    </script>
+}

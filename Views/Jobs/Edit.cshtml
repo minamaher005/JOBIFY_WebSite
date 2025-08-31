@@ -1,0 +1,113 @@
+@model WebApplication2.ViewModels.JobEditVM
+
+@{
+    ViewData["Title"] = "Edit Job";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h2>Edit Job Posting</h2>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="JobTitle" class="control-label"></label>
+                        <input asp-for="JobTitle" class="form-control" />
+                        <span asp-validation-for="JobTitle" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="LocationId" class="control-label"></label>
+                                <select asp-for="LocationId" class="form-control" asp-items="ViewBag.Locations"></select>
+                                <span asp-validation-for="LocationId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="EmploymentTypeId" class="control-label"></label>
+                                <select asp-for="EmploymentTypeId" class="form-control" asp-items="ViewBag.EmploymentTypes"></select>
+                                <span asp-validation-for="EmploymentTypeId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="RequiredExperienceYears" class="control-label"></label>
+                                <input asp-for="RequiredExperienceYears" class="form-control" />
+                                <span asp-validation-for="RequiredExperienceYears" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="SalaryFrom" class="control-label"></label>
+                                <input asp-for="SalaryFrom" class="form-control" />
+                                <span asp-validation-for="SalaryFrom" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="SalaryTo" class="control-label"></label>
+                                <input asp-for="SalaryTo" class="form-control" />
+                                <span asp-validation-for="SalaryTo" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Currency" class="control-label"></label>
+                                <input asp-for="Currency" class="form-control" placeholder="USD, EUR, etc." />
+                                <span asp-validation-for="Currency" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="ApplicationDeadline" class="control-label"></label>
+                                <input asp-for="ApplicationDeadline" class="form-control" type="date" />
+                                <span asp-validation-for="ApplicationDeadline" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="JobStatusId" class="control-label"></label>
+                                <select asp-for="JobStatusId" class="form-control" asp-items="ViewBag.JobStatuses"></select>
+                                <span asp-validation-for="JobStatusId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Requirements" class="control-label"></label>
+                        <textarea asp-for="Requirements" class="form-control" rows="5"></textarea>
+                        <span asp-validation-for="Requirements" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Benefits" class="control-label"></label>
+                        <textarea asp-for="Benefits" class="form-control" rows="5"></textarea>
+                        <span asp-validation-for="Benefits" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

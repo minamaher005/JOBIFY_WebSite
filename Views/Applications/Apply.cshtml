@@ -1,0 +1,222 @@
+@model WebApplication2.ViewModels.ApplicationCreateViewModel
+
+@{
+    ViewData["Title"] = "Apply for Job";
+}
+
+<link rel="stylesheet" href="~/css/form-enhancements.css" />
+
+<!-- Remove animation temporarily to ensure visibility -->
+<style>
+    .form-section { opacity: 1 !important; }
+    .animate-fade-in { opacity: 1 !important; }
+    @@keyframes noAnimation { from { opacity: 1; } to { opacity: 1; } }
+    .animate-fade-in { animation: noAnimation 0s !important; }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <div class="modern-form-card mb-4">
+                <div class="gradient-header p-4 text-center">
+                    <h1 class="h2 fw-bold text-white mb-0">Apply for Job</h1>
+                    @if (ViewBag.Job != null)
+                    {
+                        <p class="text-white-50 mt-2 mb-0">@ViewBag.Job.JobTitle</p>
+                    }
+                </div>
+
+                <!-- Job Overview Section -->
+                <div class="form-section p-4">
+                    <h4 class="section-title"><i class="bi bi-briefcase me-2 text-primary"></i>Job Overview</h4>
+                    
+                    @if (ViewBag.Job != null)
+                    {
+                        <div class="card border-0 shadow-sm rounded-3 mb-4">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    @if (!string.IsNullOrEmpty(ViewBag.Job.Company?.LogoUrl))
+                                    {
+                                        <img src="@ViewBag.Job.Company.LogoUrl" alt="@ViewBag.Job.Company.Name logo" class="me-3 rounded" style="width: 50px; height: 50px; object-fit: contain;">
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                            <i class="bi bi-building fs-3"></i>
+                                        </div>
+                                    }
+                                    <div>
+                                        <h5 class="mb-1 fw-bold">@ViewBag.Job.JobTitle</h5>
+                                        <p class="mb-0 text-primary">@ViewBag.Job.Company?.Name</p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-2">
+                                            <i class="bi bi-geo-alt text-primary me-2"></i>
+                                            <span>@(ViewBag.Job.Location?.LocationName ?? "Not specified")</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="bi bi-clock text-primary me-2"></i>
+                                            <span>@(ViewBag.Job.EmploymentType?.TypeName ?? "Not specified")</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @if (ViewBag.Job.SalaryFrom != null && ViewBag.Job.SalaryTo != null)
+                                        {
+                                            <div class="mb-2">
+                                                <i class="bi bi-cash-stack text-primary me-2"></i>
+                                                <span>@Convert.ToDecimal(ViewBag.Job.SalaryFrom).ToString("N0") - @Convert.ToDecimal(ViewBag.Job.SalaryTo).ToString("N0") @ViewBag.Job.Currency</span>
+                                            </div>
+                                        }
+                                        <div class="mb-2">
+                                            <i class="bi bi-calendar-check text-primary me-2"></i>
+                                            <span>Posted: @ViewBag.Job.PostedDate.ToString("MMM dd, yyyy")</span>
+                                        </div>
+                                        @if (ViewBag.Job.ApplicationDeadline != null)
+                                        {
+                                            <div class="mb-0">
+                                                <i class="bi bi-hourglass-split text-primary me-2"></i>
+                                                <span>Deadline: @ViewBag.Job.ApplicationDeadline.ToString("MMM dd, yyyy")</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <p class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Job details couldn't be loaded. You can still submit your application below.</p>
+                        </div>
+                    }
+                </div>
+                
+                <form asp-action="Apply" method="post" enctype="multipart/form-data" class="p-0">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger my-3 mx-4" role="alert"></div>
+                    <input type="hidden" asp-for="JobId" />
+
+                    <!-- Your Information Section -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-person me-2 text-primary"></i>Your Information</h4>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="PreviousCompany" class="form-control" placeholder="Previous Company" />
+                                    <label asp-for="PreviousCompany">Previous Company</label>
+                                    <span asp-validation-for="PreviousCompany" class="text-danger"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" />
+                                    <label asp-for="PhoneNumber">Phone Number</label>
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Availability & Expectations -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-calendar-date me-2 text-primary"></i>Availability & Expectations</h4>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="AvailableStartDate" class="form-control" type="date" placeholder="Available Start Date" />
+                                    <label asp-for="AvailableStartDate">Available Start Date</label>
+                                    <span asp-validation-for="AvailableStartDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="ExpectedSalary" class="form-control" placeholder="Expected Salary" />
+                                    <label asp-for="ExpectedSalary">Expected Salary</label>
+                                    <span asp-validation-for="ExpectedSalary" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resume Upload -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-file-earmark-pdf me-2 text-primary"></i>Resume Upload</h4>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Resume" class="form-label fw-medium">Upload Your Resume/CV</label>
+                            <div class="input-group">
+                                <input asp-for="Resume" class="form-control custom-file-input" type="file" accept=".pdf,.doc,.docx" />
+                                <label class="input-group-text" for="Resume"><i class="bi bi-upload"></i></label>
+                            </div>
+                            <div class="form-text mt-2">
+                                <i class="bi bi-info-circle me-1"></i> Accepted formats: PDF, DOC, DOCX (Max size: 5MB)
+                            </div>
+                            <span asp-validation-for="Resume" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Information -->
+                    <div class="form-section p-4 border-top">
+                        <h4 class="section-title"><i class="bi bi-chat-square-text me-2 text-primary"></i>Additional Information</h4>
+                        
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="AdditionalInformation" class="form-control" placeholder="Additional Information" style="height: 120px"></textarea>
+                            <label asp-for="AdditionalInformation">Additional Information</label>
+                            <span asp-validation-for="AdditionalInformation" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="form-section p-4 border-top text-end">
+                        <a asp-controller="Jobs" asp-action="Details" asp-route-id="@Model.JobId" class="btn btn-outline-secondary btn-lg me-2">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Job Details
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-send me-2"></i>Submit Application
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Custom file input label
+        document.addEventListener('DOMContentLoaded', function() {
+            // File input enhancement
+            const fileInput = document.querySelector('.custom-file-input');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const fileName = e.target.files[0] ? e.target.files[0].name : 'Choose file';
+                    const nextSibling = e.target.nextElementSibling;
+                    nextSibling.innerHTML = '<i class="bi bi-file-earmark-check"></i>';
+                });
+            }
+            
+            // No animations to ensure visibility
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach((section, index) => {
+                // Make sure all sections are visible
+                section.style.opacity = '1';
+            });
+        });
+    </script>
+}

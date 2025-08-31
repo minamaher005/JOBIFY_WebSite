@@ -1,0 +1,192 @@
+@model WebApplication2.Models.Company
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container py-5">
+    <!-- Company Header Section -->
+    <div style="background-color: #113F67; color: white; border-radius: 8px; margin-bottom: 30px;">
+        <div class="p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <div style="width: 80px; height: 80px; background-color: white; border-radius: 50%; margin-right: 20px; display: flex; align-items: center; justify-content: center;">
+                            @if (!string.IsNullOrEmpty(Model.LogoUrl))
+                            {
+                                <img src="@Model.LogoUrl" alt="@Model.Name logo" style="max-height: 50px; max-width: 50px;" />
+                            }
+                            else
+                            {
+                                <div style="color: #113F67; font-size: 2.5rem;">
+                                    <i class="fa-solid fa-building"></i>
+                                </div>
+                            }
+                        </div>
+                            <div>
+                                <h1 class="mb-1 fw-bold">@Model.Name</h1>
+                                <p class="mb-2">@(Model.Industry?.IndustryType ?? "Unknown Industry")</p>
+                                @if (Model.Rating.HasValue)
+                                {
+                                    <div class="d-flex align-items-center">
+                                        @for (int i = 0; i < Math.Floor(Model.Rating.Value); i++)
+                                        {
+                                            <i class="fa-solid fa-star text-warning me-1"></i>
+                                        }
+                                        @if (Model.Rating.Value % 1 != 0)
+                                        {
+                                            <i class="fa-solid fa-star-half text-warning me-1"></i>
+                                        }
+                                        <span class="ms-1">@Model.Rating.Value.ToString("0.0")</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <div class="d-flex flex-column gap-2">
+                            @if (!string.IsNullOrEmpty(Model.Website))
+                            {
+                                <a href="@(Model.Website.StartsWith("http") ? Model.Website : "https://" + Model.Website)" 
+                                   target="_blank" rel="noopener noreferrer" class="btn btn-outline-light">
+                                    <i class="fa-solid fa-globe me-2"></i>Visit Website
+                                </a>
+                            }
+                            <a asp-controller="Jobs" asp-action="Search" asp-route-companyId="@Model.Id" 
+                               class="btn btn-warning" style="color:#113F67">
+                                <i class="fa-solid fa-briefcase me-2"></i>View Open Positions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div style="background-color: white; border-radius: 8px; padding: 25px; box-shadow: 0px 2px 10px rgba(0,0,0,0.1); margin-top: 25px; color: #333;">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div style="border-radius: 8px; padding: 20px; margin-bottom: 15px; background-color: #f8f9fa; height: 100%;">
+                                <h5 style="color: #113F67; margin-bottom: 20px;">
+                                    <i class="fa-solid fa-building me-2"></i>Company Info
+                                </h5>
+                                <ul class="list-unstyled mb-0">
+                                    @if (Model.FoundationDate.HasValue)
+                                    {
+                                        <li class="mb-3 d-flex">
+                                            <i class="fa-solid fa-calendar text-primary me-2 mt-1"></i>
+                                            <div>
+                                                <strong style="color: #34699A;">Founded</strong><br>
+                                                <span style="color: #444;">@Model.FoundationDate.Value.ToString("yyyy")</span>
+                                            </div>
+                                        </li>
+                                    }
+
+                                    @if (Model.CompanySize.HasValue)
+                                    {
+                                        <li class="mb-3 d-flex">
+                                            <i class="fa-solid fa-users text-primary me-2 mt-1"></i>
+                                            <div>
+                                                <strong style="color: #34699A;">Company Size</strong><br>
+                                                <span style="color: #444;">@Model.CompanySize employees</span>
+                                            </div>
+                                        </li>
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(Model.HeadquartersLocation))
+                                    {
+                                        <li class="mb-3 d-flex">
+                                            <i class="fa-solid fa-location-dot text-primary me-2 mt-1"></i>
+                                            <div>
+                                                <strong style="color: #34699A;">Headquarters</strong><br>
+                                                <span style="color: #444;">@Model.HeadquartersLocation</span>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <div style="border-radius: 8px; padding: 20px; margin-bottom: 15px; background-color: #f8f9fa; height: 100%;">
+                                <h5 style="color: #113F67; margin-bottom: 20px;">
+                                    <i class="fa-solid fa-circle-info me-2"></i>About the Company
+                                </h5>
+                                <p class="mb-0" style="color: #444;">@(Model.Description ?? "No description available.")</p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            
+            <!-- Branches Section -->
+            <div class="mt-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div style="width: 5px; height: 28px; background-color: #113F67; margin-right: 15px;"></div>
+                    <h4 style="color: #113F67; margin: 0;">
+                        <i class="fa-solid fa-map-location-dot me-2"></i>Company Branches
+                    </h4>
+                </div>
+                
+                @if (ViewBag.Branches != null && ViewBag.Branches.Count > 0)
+                {
+                    <div class="row g-4">
+                        @foreach (var branch in ViewBag.Branches)
+                        {
+                            <div class="col-md-4">
+                                <div class="card shadow-sm mb-4 border-0" style="border-radius: 12px;">
+                                    <div class="card-body d-flex flex-column gap-2">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="fa-solid fa-location-dot text-primary fs-4 me-2"></i>
+                                            <span class="fw-semibold fs-5" style="color: #113F67;">@branch.BranchLocation</span>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(branch.PhoneNumber))
+                                        {
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="fa-solid fa-phone text-primary fs-5 me-2"></i>
+                                                <span class="fs-6" style="color: #444;">@branch.PhoneNumber</span>
+                                            </div>
+                                        }
+                                        <div class="mt-2 text-end">
+                                            <a href="#" class="btn btn-outline-primary rounded-pill px-3 py-1 fw-semibold">
+                                                <i class="fa-solid fa-map-pin me-1"></i> View on Map
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div style="background-color: rgba(88, 160, 200, 0.1); border-radius: 8px; padding: 15px; color: #113F67;">
+                        <i class="fa-solid fa-circle-info me-2"></i>No branches available for this company.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" 
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<script>
+    // Add hover effect to branch cards
+    document.addEventListener('DOMContentLoaded', function() {
+        const branchCards = document.querySelectorAll('[style*="background-color: white; border-radius: 8px; padding: 20px;"]');
+        branchCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 10px 20px rgba(17, 63, 103, 0.15)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0px 2px 10px rgba(0,0,0,0.1)';
+            });
+        });
+    });
+</script>
